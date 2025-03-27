@@ -18,7 +18,7 @@ $(document).ready(function () {
 	var page = window.location.hash.replace("#","").toLowerCase();
 
 	if(page==""){
-		page = "aboutscribouille"
+		page = "home"
 	}
 	
 	if(themas.indexOf(page) == -1){
