@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Scribouille Drive</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="pi.ico" />
+
+    <!-- external css -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,500">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- internal css -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbarwithpadding">
+        <div class="container-fluid">
+			<div class="auth">
+				<span class="iconAuth" data-toggle="tooltip" data-placement="bottom" title="Authenticate as Google user">
+					<i class="fab fa-google whenOff" id="googleAuth" aria-hidden="true"></i>
+				</span>
+				<input class="whenOff" type = "email" id="txtEmail" placeholder="Email" style="margin-left:12px;" required>
+				<input class="whenOff" type = "password" id="txtPassword" placeholder="Password">
+				<button class="btn btn-primary whenOff" id="btnLogin">Se connecter</button>
+				<button class="btn btn-success whenOff" id="btnSignUp">S'inscrire</button>
+				<span class="whenOn" id="userMessage"></span>
+				<button class="btn btn-primary hide whenOn" id="btnLogout">Se déconnecter</button>
+			</div>
+            <div class="navbar-header">
+                <a class="navbar-brand title" >
+                   Scribouille Drive
+                </a>
+            </div>
+            <ul class="nav navbar-nav menu" style="float:left;">
+                <li class="dropdown">
+				<a href="#" class="dropdown-toggle line1" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-lg fa-bars"></i></span></a>
+					<ul class="dropdown-menu" id="thema-menu">
+						<li id="home"><a href="#home">Textes</a></li>
+						<li id="aboutscribouille"><a href="#aboutscribouille">Au sujet de Scribouille</a></li>
+					</ul>
+				</li>
+            </ul>
+			      <ul id="thema-bar" class="nav navbar-nav menu only-desktop " style="float:left;margin-left:20px;">
+					<li class="iconThema" data-language="home" data-toggle="tooltip" data-placement="bottom" title="Accueil"><i class="fab fa-js-square"></i></li>
+					<li class="iconThema" data-language="aboutscribouille" data-toggle="tooltip" data-placement="bottom" title="Home"><i class="fas fa-address-card"></i></li>
+				</ul>
+        </div>
+    </nav>
+
+    <div id="container"> <!-- container for all pages-->
+	<!-- Modal for deleting other posts-->
+	  <div class="modal" id="post-del-modal" tabindex="-1" role="dialog">
+	   <div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header" style="padding-top:10px;">
+			  <button type="button" class="close" data-dismiss="modal">&times;</button>
+			  <p class="modal-title" >Attention !</p>
+			</div>
+			<div class="modal-body">
+			  Etes-vous certain de vouloir supprimer ce texte ?
+			</div>
+			<div class="modal-footer">
+			  <button type="button" id="post-del-ok" data-id=""  class="btn btn-danger" data-dismiss="modal">OK</button>
+			  <button type="button" class="btn btn-warning" data-dismiss="modal">Annuler</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+  	  <!-- End Modal for deleting other posts-->  
+	  
+	  	<!-- Modal for comments-->
+	  <div class="modal" id="modal-comment" tabindex="-1" role="dialog">
+	   <div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header" style="padding-top:10px;">
+			  <button type="button" class="close modal-cancel" data-dismiss="modal">&times;</button>
+			  <p class="modal-title" >Ajouter un commentaire</p>
+			</div>
+			<div class="modal-body">
+				<div id="commentModal" data-category="" data-key="">
+					<b>Votre commentaire :</b><br/>
+					<textarea id="modal-comment-text" style="width:550px;height:125px;"></textarea><br />
+				</div>
+			</div>
+			<div class="modal-footer">
+				<span id="modal-error"></span>
+					<button type='button'  class='modal-cancel btn btn-sm btn-default'>Annuler</button>
+					<button type='button'  class='modal-save btn btn-sm btn-primary'>Enregistrer</button>
+			</div>
+		  </div>
+		</div>
+	  </div>
+  	  <!-- End Modal for deleting other posts-->  
+
+	<!-- Beginning of pages-->
+
+	<div id="home" style="display: none;">
+		<h5>Textes </h5>
+		<p>Textes de la communauté Scribouille</p>
+		<input type="text" data-category="home" class="searchField "/>
+		<button type='button'  class='search btn btn-sm btn-default '>Chercher</button>
+		<span class="whenOn myEyesOnly ">&nbsp;</span>
+		<button type='button' data-target="#post-home" class='whenOn myEyesOnly post-new btn btn-sm btn-default'>Nouveau Texte</button>
+		<hr />
+		<div id="post-home" data-category="home" data-comment="false" style="display: none;">
+			<b class="keyzone">Key</b>
+			<input class="keyzone post-key" type = "text" readonly="readonly" value=""><br class="keyzone" />
+			<b class="titlezone">Titre</b><br/>
+			<input type="text" class="post-title titlezone" value=""><br />
+			<b>Text</b><br/>
+			<textarea class="post-text"></textarea><br />
+			<button type='button'  class='post-cancel btn btn-sm btn-default'>Annuler</button>
+			<button type='button'  class='post-save btn btn-sm btn-primary'>Enregistrer</button>
+			<span class="post-error"></span>
+			<hr />
+		</div>
+		<div id="home-posts">
+
+		</div>
+	</div>
+		
+	<div id="aboutZone" style="display: none;">
+		<h5>Bienvenue</h5>
+		<p>This blog is my notebook build on firebase : you are free to comment</p>
+		<input type="text" data-category="about" class="searchField "/>
+		<button type='button'  class='search btn btn-sm btn-default '>Search</button>
+		<span class="whenOn myEyesOnly ">&nbsp;</span>
+		<button type='button' data-target="#post-about" class='whenOn myEyesOnly post-new btn btn-sm btn-default'>New Post</button>
+		<hr />
+		<div id="post-about" data-category="about" data-comment="false" style="display: none;">
+			<b class="keyzone">Key</b>
+			<input class="keyzone post-key" type = "text" readonly="readonly" value=""><br class="keyzone" />
+			<b class="titlezone">Title</b><br/>
+			<input type="text" class="post-title titlezone" value=""><br />
+			<b>Text</b><br/>
+			<textarea class="post-text"></textarea><br />
+			<button type='button'  class='post-cancel btn btn-sm btn-default'>Cancel</button>
+			<button type='button'  class='post-save btn btn-sm btn-primary'>Save</button>
+			<span class="post-error"></span>
+			<hr />
+		</div>
+		<div id="about-posts">
+
+		</div>
+		<div class="static-post hide">
+			<b class="subject">Scribouille Drive </b>
+			<p>Ceci est un test d'utilisation de Google Drive</p>
+			<p>pour présenter, anoter et commenter des textes</p>
+			<p>Pour participez :</p>
+			<p>Connectez-vous et ajoutez le lien de votre doc google</p>
+			<p>Contact : <a href="mailto:pmg.meyer@gmail.com">pmg.meyer@gmail.com</a></p>
+		</div>
+	</div>
+	
+	<div id="cyberLostZone" style="display: none;">
+		<i class="fas fa-robot fa-6x"></i>
+		<br /><br />
+		<h5> 404 ! Vous êtes perdu dans le cyberespace !</h5>
+		<p>Pas de panique, choisissez une page dans le menu</p>
+		g
+	</div>
+	<div id="htmlRemover" class="hide"></div>
+</div>
+
+    <!-- external scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-database.js"></script>
+
+    <!-- internal scripts -->
+
+    <script type="text/javascript" src="work.js"></script>
+	
+</body>
+</html>
+
